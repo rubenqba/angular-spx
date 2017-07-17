@@ -7,12 +7,18 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 				link: function (scope, element, attrs) {
 					var $body = angular.element("body");
 					var _hide = function () {
+						console.log('inside _hide function...');
 						if (scope.$hide) {
 							scope.$hide();
 							scope.$apply();
+						} else {
+							console.log('no existe $hide()');
 						}
 					};
-					console.log('inside directive')
+					console.log(element);
+					console.log(scope);
+
+					
 					// Stop propagation when clicking inside popover.
 					$timeout(function() {
 						element.on("click", function (event) {
@@ -20,10 +26,10 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 						});
 
 						// Hide when clicking outside.
-						$body.one("click", _hide);
+						$body.on("click", _hide);
 
 						// Safe remove.
-						scope.$on("$destroy", function () {
+						element.on("$destroy", function () {
 							$body.off("click", _hide);
 							element.off("click");
 						});
@@ -59,7 +65,7 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 	            });
 	    };
 	})
-	.controller("cartController", function ($scope, $http) {
+	.controller("cartController", function ($scope, $http, $popover) {
 		$scope.usuario = "OLIP";
 		$scope.urlApiRest= "http://localhost:7001/ApiRestSpx-1.0.0/api/v1";
 		$scope.resourcesUrl = "http://192.168.40.5/appsmet/resources/compras";
@@ -70,10 +76,23 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 			content: []
 		};
 
-		$scope.dynamicPopover = {
+		var dynamicPopover = {
 		    content: 'Hello, World!',
-		    templateUrl: 'overlay.html',
-		    title: 'Title'
+		    templateUrl: 'overlay1',
+		    title: 'Title',
+		    placement: "bottom auto",
+		    animation: "am-flip-x",
+		    trigger: 'manual'
+		};
+
+		var myPopover = $popover(angular.element(document.querySelector('#showCartLink')), dynamicPopover);
+		$scope.togglePopover = function() {
+			if (!myPopover.$isShown) {
+				myPopover.$promise.then(myPopover.show());
+			} else {
+				myPopover.$promise.then(myPopover.hide());
+			}
+			
 		};
 
 		console.log('iniciando carro compras...');
@@ -103,21 +122,15 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 	    };
 
 	    $scope.initModule = function() {
-	    	
-
 			var scrollTimer, lastScrollFireTime = 0;
-
 			$('#cartItems').scroll(function() {
-
 			    var minScrollTime = 1000;
 			    var now = new Date().getTime();
-
 			    function processScroll() {
 			        console.log(new Date().getTime().toString());
 			        console.log('calling scroll...');
 			        $scope.showPreviewCarroCompras();
 			    }
-
 			    if (!scrollTimer) {
 			        if (now - lastScrollFireTime > (3 * minScrollTime)) {
 			            processScroll();   // fire immediately on first scroll
@@ -131,27 +144,7 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 			    }
 			});
 
-			$('.popover').on("mouseleave", function(){
-				$(el).popover("hide");
-			});
-
 			$scope.showPreviewCarroCompras();
 		};
+
 	});
-
-
-// $('#showCartLink').on("mouseover", function(){
-// 	console.log( $('on mouseover'));
-// 	$('#showCartLink').popover("show");
-// 	console.log( $('.popover-content'));
-// 	$('.popover-content').scroll(function() {
-// 		var div = $(this);
-// 		console.log("entró",div,div.height(),div.scrollTop());
-// 		if (div.height() == div.scrollTop() + 1) {
-// 		  alert("Reached the bottom!");
-// 		}
-// 	});              
-// 	$('.popover').on("mouseleave", function(){
-// 		$(el).popover("hide");
-// 	});
-// });

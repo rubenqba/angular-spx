@@ -134,22 +134,17 @@
 	            	data-placement="auto"
 	            	data-animation="am-flip-x" 
 	            	data-auto-close="0" 
-	            	bs-popover
-	            	focusable-popover>Custom Popover</button>
+	            	bs-popover>Custom Popover</button>
 	        </div>
 	        <div class="col-md-4">
 	            <span> </span>
 	        </div>
-	        <div id="showCartlink" class="col-md-1">
-                <a  href="javascript:"
+	        <div  class="col-md-1">
+                <a id="showCartLink" href="javascript:"
                 	style="text-decoration: none !important"
                 	data-content="{{popover.content}}" 
                 	class="text-decoration: none !important"
-					data-template-url="overlay1"
-					data-trigger="focus"
-					data-placement="bottom auto"
-					data-animation="am-flip-x"
-                	bs-popover focusable-popover>
+					ng-click="togglePopover()">
 		        	<span class="fa-stack fa-lg">
 		        	  <i class="fa fa-circle fa-stack-2x"></i>
 		        	  <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
