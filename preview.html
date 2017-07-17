@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="spxAngular">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Angular Tests</title>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
+
+	<link rel="stylesheet" href="ui-bootstrap-custom-2.5.0-csp.css">
+	<script src="ui-bootstrap-custom-2.5.0.min.js"></script>
+	<script src="ui-bootstrap-custom-tpls-2.5.0.min.js"></script>
+	<style>
+		.btn-circle {
+			width: 30px;
+			height: 30px;
+			text-align: center;
+			padding: 6px 0;
+			font-size: 12px;
+			line-height: 1.428571429;
+			border-radius: 15px;
+		}	
+		.table > tbody > tr > td {
+		    vertical-align: middle;
+		}
+		.icon-circle-stock {
+		    color: #22b20a;
+		}
+		.icon-color-stock {
+		    color: white;
+		}
+		.icon-circle-supplier {
+		    color: darkorange;
+		}
+		.icon-circle-spot {
+		    color: #0c50f0;
+		}
+	</style>
+	<script src="app.js"></script>
+</head>
+<body >
+	<div class="container-fluid">
+		<div class="panel panel-default" ng-controller="cartController" ng-init="showPreviewCarroCompras()">
+			<div class="panel-heading">
+		  		<div class="col-md-12">
+		  			<div class="col-md-8"><h3>Carro de compras</h3></div>
+		  			<div class="col-md-4"><h3><small>{{shoppingCart.size}} items</small></h3></div>
+		  		</div>
+		  	</div>
+		  	<div class="panel-body">
+		  		<div id="cartItems" class="col-md-12 pre-scrollable">
+	  			  	<table class="table table-responsive">
+	  			  		<tr ng-repeat="item in shoppingCart.content">	  			  			
+	  						<td class="col-md-1">
+	  							<span ng-show="{{item.tipo_item == 1}}" class="fa-stack">
+	  							  <i class="fa fa-circle fa-stack-2x icon-circle-supplier"></i>
+	  							  <i class="fa fa-money fa-stack-1x icon-color-stock"></i>
+	  							</span>
+	  							<span ng-show="{{item.tipo_item == 2}}" class="fa-stack">
+	  							  <i class="fa fa-circle fa-stack-2x icon-circle-stock"></i>
+	  							  <i class="fa fa-home fa-stack-1x icon-color-stock"></i>
+	  							</span>
+	  							<span ng-show="{{item.tipo_item == 3}}" class="fa-stack">
+	  							  <i class="fa fa-circle fa-stack-2x icon-circle-spot"></i>
+	  							  <i class="fa fa-bolt fa-stack-1x icon-color-stock"></i>
+	  							</span>
+	  						</td>
+	  						<td class="col-md-1">
+	  							<img ng-attr-src="{{resourcesUrl + (item.urlImg || '/resources/imgs/no_image.jpg')}}"  class="img-rounded" alt="{{item.descripcion}}" 
+	  								width="50" height="50">
+	  						</td>
+	  						<td class="col-md-6">{{item.descripcion}}</td>
+	  						<td class="col-md-3">
+	  							<div class="row">UDM: {{item.udm}}</div>
+	  							<div class="row">Cant: {{item.cantidad}}</div>
+	  						</td>
+	  						<td class="col-md-1">
+	  							<button type="button" class="btn btn-danger btn-circle glyphicon glyphicon-trash"></button>
+	  						</td>		
+	  					</tr>
+	  			  	</table>
+		  		</div>
+		  	</div>
+		</div>
+	</div>
+</body>
+</html>
