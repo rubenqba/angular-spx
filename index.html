@@ -37,6 +37,8 @@
 		}
 		.table > tbody > tr > td {
 		    vertical-align: middle;
+		}
+		.text-cell {
 		    font-size: 10px;
 		}
 		.icon-circle-stock {
@@ -99,12 +101,12 @@
 	  							  <i class="fa fa-bolt fa-stack-1x icon-color-stock"></i>
 	  							</span>
 	  						</td>
-      						<td class="col-md-1">
+      						<td class="col-md-1 text-cell">
       							<img ng-attr-src="{{resourcesUrl + (item.url_img || '/resources/imgs/no_image.jpg')}}"  class="img-rounded" alt="{{item.descripcion}}" 
       								width="50" height="50">
       						</td>
-      						<td class="col-md-6">{{item.descripcion}}</td>
-      						<td class="col-md-3">
+      						<td class="col-md-6 text-cell">{{item.descripcion}}</td>
+      						<td class="col-md-3 text-cell">
       							<div class="row">UDM: {{item.udm}}</div>
       							<div class="row">Cant: {{item.cantidad}}</div>
       						</td>
@@ -144,7 +146,7 @@
                 	style="text-decoration: none !important"
                 	data-content="{{popover.content}}" 
                 	class="text-decoration: none !important"
-					ng-click="togglePopover()">
+					ng-mouseover="togglePopover()">
 		        	<span class="fa-stack fa-lg">
 		        	  <i class="fa fa-circle fa-stack-2x"></i>
 		        	  <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>

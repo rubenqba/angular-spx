@@ -87,12 +87,17 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 
 		var myPopover = $popover(angular.element(document.querySelector('#showCartLink')), dynamicPopover);
 		$scope.togglePopover = function() {
-			if (!myPopover.$isShown) {
-				myPopover.$promise.then(myPopover.show());
-			} else {
+			var $body = angular.element("body");
+
+			var _hide = function() {
+				console.log('cerrando...')
 				myPopover.$promise.then(myPopover.hide());
 			}
-			
+
+			if (!myPopover.$isShown) {
+				myPopover.$promise.then(myPopover.show());
+				myPopover.$element.on("mouseleave", _hide);
+			}
 		};
 
 		console.log('iniciando carro compras...');
