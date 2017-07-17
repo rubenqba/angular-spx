@@ -84,7 +84,7 @@
     	  		</div>
     	  	</div>
     	  	<div class="popover-content">
-    	  		<div id="cartItems" class="col-md-12 pre-scrollable" ng-init="initModule()">
+    	  		<div id="cartItems" class=" row col-md-12 pre-scrollable" ng-init="initModule()">
       			  	<table class="table table-responsive">
       			  		<tr ng-repeat="item in shoppingCart.content">
       						<td class="col-md-1">
@@ -114,8 +114,12 @@
       							<button type="button" class="btn btn-danger btn-circle glyphicon glyphicon-trash"></button>
       						</td>		
       					</tr>
-      			  	</table>
+      			  	</table>      			  	
     	  		</div>
+    	  		<div class="row col-md-12">
+    	  			<button class="pull-right btn btn-primary">Go to cart</button>
+    	  		</div>
+    	  		<div class="row col-md-12"><span> </span></div>
     	  	</div>
 		</div>
 	</script>
