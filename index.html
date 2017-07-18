@@ -18,18 +18,11 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
 	<style type="text/css">
-    	.webui-popover-content{
-    	  height:300px;
-    	  overflow:auto;
-    	  width:600px;
-    	}
-    	.webui-popover{ 
-    	  border-radius: 0;
-    	}
     	.btn-circle {
 			width: 30px;
 			height: 30px;
 			text-align: center;
+			vertical-align: center;
 			padding: 6px 0;
 			font-size: 12px;
 			line-height: 1.428571429;
@@ -84,7 +77,9 @@
     	  		</div>
     	  	</div>
     	  	<div class="popover-content">
-    	  		<div id="cartItems" class=" row col-md-12 pre-scrollable" ng-init="initModule()">
+    	  		<div id="cartItems" class=" row col-md-12 pre-scrollable" 
+    	  			ng-init="initModule()" 
+    	  			on-scroll-to-bottom="showPreviewCarroCompras()">
       			  	<table class="table table-responsive">
       			  		<tr ng-repeat="item in shoppingCart.content">
       						<td class="col-md-1">
@@ -111,7 +106,7 @@
       							<div class="row">Cant: {{item.cantidad}}</div>
       						</td>
       						<td class="col-md-1">
-      							<button type="button" class="btn btn-danger btn-circle glyphicon glyphicon-trash"></button>
+      							<button type="button" class="btn btn-danger btn-circle fa fa-trash"></button>
       						</td>		
       					</tr>
       			  	</table>      			  	
@@ -135,12 +130,12 @@
 	            <button id="showCart" type="button" class="btn btn-danger" 
 	            	title="{{popover.title}}" 
 	            	data-content="{{popover.content}}" 
-	            	data-template-url="overlay1"
-	            	data-trigger="hover"
-	            	data-placement="auto"
-	            	data-animation="am-flip-x" 
-	            	data-auto-close="0" 
-	            	bs-popover>Custom Popover</button>
+					ng-mouseover="togglePopover()">
+					<span class="fa-stack fa-lg">
+		        	  <i class="fa fa-circle fa-stack-2x"></i>
+		        	  <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
+		        	</span>
+				</button>
 	        </div>
 	        <div class="col-md-4">
 	            <span> </span>
@@ -149,7 +144,6 @@
                 <a id="showCartLink" href="javascript:"
                 	style="text-decoration: none !important"
                 	data-content="{{popover.content}}" 
-                	class="text-decoration: none !important"
 					ng-mouseover="togglePopover()">
 		        	<span class="fa-stack fa-lg">
 		        	  <i class="fa fa-circle fa-stack-2x"></i>

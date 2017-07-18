@@ -1,43 +1,21 @@
 
 angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
-	.directive("focusablePopover", ["$timeout",
-		function ($timeout) {
-			return {
-				restrict: "EAC",
-				link: function (scope, element, attrs) {
-					var $body = angular.element("body");
-					var _hide = function () {
-						console.log('inside _hide function...');
-						if (scope.$hide) {
-							scope.$hide();
-							scope.$apply();
-						} else {
-							console.log('no existe $hide()');
-						}
-					};
-					console.log(element);
-					console.log(scope);
-
-					
-					// Stop propagation when clicking inside popover.
-					$timeout(function() {
-						element.on("click", function (event) {
-							event.stopPropagation();
-						});
-
-						// Hide when clicking outside.
-						$body.on("click", _hide);
-
-						// Safe remove.
-						element.on("$destroy", function () {
-							$body.off("click", _hide);
-							element.off("click");
-						});
-					}, 0);
-				}
-			};
-		}
-	])
+	.directive('onScrollToBottom', function ($document) {
+	    //This function will fire an event when the container/document is scrolled to the bottom of the page
+	    return {
+	        restrict: 'A',
+	        link: function (scope, element, attrs) {
+	            element.bind("scroll", function () {
+	            	console.log(element[0].scrollTop + element[0].offsetHeight);
+	                if (element[0].scrollTop + element[0].offsetHeight >= element[0].scrollHeight) {
+	            		console.log('scrolling...');
+	                    //run the event that was passed through
+	                    scope.$apply(attrs.onScrollToBottom);
+	                }
+	            });
+	        }
+	    };
+	})
 	.controller("uenController", function ($scope, $http) {
 		$scope.message = "Yo mismo";
 		$scope.uens = [];
@@ -76,19 +54,18 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 			content: []
 		};
 
-		var dynamicPopover = {
+		var popoverOptions = {
 		    content: 'Hello, World!',
 		    templateUrl: 'overlay1',
 		    title: 'Title',
 		    placement: "bottom auto",
 		    animation: "am-flip-x",
-		    trigger: 'manual'
+		    trigger: 'manual',
+		    triggerId: '#showCart'
 		};
 
-		var myPopover = $popover(angular.element(document.querySelector('#showCartLink')), dynamicPopover);
+		var myPopover = $popover(angular.element(document.querySelector(popoverOptions.triggerId)), popoverOptions);
 		$scope.togglePopover = function() {
-			var $body = angular.element("body");
-
 			var _hide = function() {
 				console.log('cerrando...')
 				myPopover.$promise.then(myPopover.hide());
@@ -101,16 +78,7 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 		};
 
 		console.log('iniciando carro compras...');
-		$http.get($scope.urlApiRest+'/user/'+$scope.usuario+'/uens').
-	            then(function (response) {
-	                $scope.uens = response.data;
-	            });
-
-	    $http.get($scope.urlApiRest+'/user/'+$scope.usuario+'/messages/count').
-	            then(function (response) {
-	                $scope.noLeidos = response.data;
-	            });
-
+		
 	    $scope.showPreviewCarroCompras = function() {
 	    	if (!$scope.shoppingCart.last) {
 	    		console.log("mostrando pagina " + $scope.shoppingCart.page + " de carro para " + $scope.usuario + "...");
@@ -127,29 +95,6 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 	    };
 
 	    $scope.initModule = function() {
-			var scrollTimer, lastScrollFireTime = 0;
-			$('#cartItems').scroll(function() {
-			    var minScrollTime = 1000;
-			    var now = new Date().getTime();
-			    function processScroll() {
-			        console.log(new Date().getTime().toString());
-			        console.log('calling scroll...');
-			        $scope.showPreviewCarroCompras();
-			    }
-			    if (!scrollTimer) {
-			        if (now - lastScrollFireTime > (3 * minScrollTime)) {
-			            processScroll();   // fire immediately on first scroll
-			            lastScrollFireTime = now;
-			        }
-			        scrollTimer = setTimeout(function() {
-			            scrollTimer = null;
-			            lastScrollFireTime = new Date().getTime();
-			            processScroll();
-			        }, minScrollTime);
-			    }
-			});
-
 			$scope.showPreviewCarroCompras();
 		};
-
 	});
