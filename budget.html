@@ -56,7 +56,7 @@
 </head>
 <body >
 	<div class="container-fluid">
-		<form class="panel panel-default" ng-controller="budgetController as bc" ng-init="showBudget()">
+		<form class="panel panel-default" ng-controller="budgetController as bc">
 			<div class="panel-heading">
 		  		<div class="row">
 		  			<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"><h4>Consulta Presupuesto</h4></div>
@@ -120,27 +120,25 @@
 		  										ng-disabled="!responsable"
 										  		ng-model="item.periodo" 
 									        	ng-options="p.nombre as p.nombre for p in periodos"
-									        	ng-blur="updateTransferencia($index, item)">
+									        	ng-blur="updateTransferencia($index, item); printTransfer();">
 		  									</select>
 		  								</th>
-		  								<th colspan="2">
-		  									{{item}}
-		  								</th>
-		  								<!--<th>
+		  								<th>
 		  									<select name="" class="form-control input-xs" 
 		  										required="required"
 		  										ng-disabled="!responsable"
 										  		ng-model="item.from" 
 									        	ng-options="cat.id as cat.nombre_categoria for cat in categorias | notSameCategory:item.to"
-									        	ng-change="printTransfer()">
+									        	ng-blur="updateTransferencia($index, item); printTransfer();">
 		  									</select>
 		  								</th>
 		  								<th>
 		  									<input type="number" name="" class="form-control input-xs" 
 		  										value="" min="0" max="" step="" 
 		  										required="required" ng-disabled="!responsable"
-		  										ng-model="item.ammount">
-		  								</th>-->
+		  										ng-model="item.ammount"
+		  										ng-blur="updateTransferencia($index, item); printTransfer();">
+		  								</th>
 		  							</tr>  			  							
 		  						</tbody>
 		  					</table>
