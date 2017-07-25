@@ -5,10 +5,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Angular Tests</title>
 
-	<style type="text/css">
-		
-	</style>
-
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 	<!-- Latest compiled and minified CSS -->
@@ -51,18 +47,7 @@
 		}
     </style>
 
-	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
-
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.8/angular-strap.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.8/angular-strap.tpl.min.js"></script>
-
-	<script src="app.js"></script>
 
 	<script type="text/ng-template" id="overlay1">
 		<div class="popover" 
@@ -152,6 +137,11 @@
             	</a>
 	        </div>
 		</div>
+		<div class="row">
+			<div class="col-md-1">
+				<button id="showTrf" type="button" class="btn btn-success" >Consultar/Transferir Presupuesto</button>
+			</div>
+		</div>
 		<div ng-controller="uenController">
 			<div class="row">
 				<form class="col-md-6" ng-submit="updateUens()">
@@ -161,6 +151,7 @@
 					</div>
 					<button type="submit" class="btn btn-primary">Ok</button>
 				</form>	
+				<div class="col-md-6"><h3>Usuario: {{usuario}}</h3></div>
 			</div>
 			<div class="row">
 				<form class="col-md-6" ng-submit="updateUens()">
@@ -173,7 +164,7 @@
 					  	</select>
 					</div>
 				</form>
-				<dv class="col-md-6"><h3>Uen seleccionada: {{idUen}}</h3></dv>
+				<div class="col-md-6"><h3>Uen seleccionada: {{idUen}}</h3></div>
 			</div>
 			
 			<div class="row">
@@ -182,8 +173,18 @@
 				</div>
 			</div>
 		</div>
-		
-		
 	</div>
+		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.8/angular-strap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.8/angular-strap.tpl.min.js"></script>
+
+	<script src="app.js"></script>
 </body>
 </html>

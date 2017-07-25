@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="spxAngular">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Angular Tests</title>
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">	
+
+	<style>
+		.btn-circle {
+			width: 30px;
+			height: 30px;
+			text-align: center;
+			padding: 6px 0;
+			font-size: 12px;
+			line-height: 1.428571429;
+			border-radius: 15px;
+		}	
+		.table > tbody > tr > td {
+		    vertical-align: middle;
+		}
+		.table > thead > .table-primary-header {
+		    background-color: darkblue;
+		}
+		.table > thead > .table-secondary-header {
+		    background-color: grey;
+		    color: white;
+		}
+		.icon-circle-stock {
+		    color: #22b20a;
+		}
+		.icon-color-stock {
+		    color: white;
+		}
+		.icon-circle-supplier {
+		    color: darkorange;
+		}
+		.icon-circle-spot {
+		    color: #0c50f0;
+		}
+		.input-xs {
+		  height: 22px;
+		  padding: 2px 5px;
+		  font-size: 12px;
+		  line-height: 1.5; /* If Placeholder of the input is moved up, rem/modify this. */
+		  border-radius: 3px;
+		}
+	</style>
+</head>
+<body >
+	<div class="container-fluid">
+		<form class="panel panel-default" ng-controller="budgetController as bc" ng-init="showBudget()">
+			<div class="panel-heading">
+		  		<div class="row">
+		  			<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"><h4>Consulta Presupuesto</h4></div>
+		  			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+		  				<button type="button" class="btn btn-primary pull-right" ng-click="transferBudget()">Transferir</button>
+		  			</div>
+		  		</div>
+		  		<div class="row">transferencia={{transferencia}}</div>
+		  	</div>
+		  	<div class="panel-body">
+		  		<div class="row well-sm">
+		  			<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-primary" ng-init="loadUen()">
+		  				<strong>UEN: {{uen.nombre}}</strong> 
+		  			</div>
+		  			<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-primary" ng-init="loadCostCenter()">
+		  				<strong>Centro de Costo: {{cc.codigo}} - {{cc.nombre}}</strong>
+		  			</div>
+		  		</div>
+		  		<div class="row">
+  			  		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pre-scrollable" 
+  			  			ng-controller="budgetController"
+  			  			ng-init="initBudget()">
+  			  			<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+		  					<table class="table table-hover" ng-init="showBudget()">
+		  						<thead class="thead-inverse">
+		  							<tr class="bg-primary">
+		  								<th colspan="3"><center>ORIGEN</center></th>
+		  							</tr>
+		  							<tr class="table-secondary-header">
+		  								<th>Categor&iacute;a de gasto</th>
+		  								<th>$ Disponible</th>
+		  								<th>Moneda</th>
+		  							</tr>
+		  						</thead>
+		  						<tbody>
+		  							<tr ng-repeat="item in budget.content" style="height: 40px;">
+		  								<td>{{item.id}} - {{item.nombre_categoria}}</td>
+		  								<td class="text-right">{{item.saldo_disponible}}</td>
+		  								<td>{{item.moneda}}</td>
+		  							</tr>
+		  						</tbody>
+		  					</table>
+  			  			</div>
+  			  			<div id="trfForm" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+		  					<table class="table">
+		  						<thead>
+		  							<tr class="bg-primary">
+		  								<th colspan="3"><center>DESTINO</center></th>
+		  							</tr>
+		  							<tr class="table-secondary-header">
+		  								<th>Per&iacute;odo</th>
+		  								<th class="divider">Transferir a</th>
+		  								<th>Monto</th>
+		  							</tr>
+		  						</thead>
+		  						<tbody>
+		  							<tr ng-repeat="item in transferencia" style="height: 40px;">
+		  								<th>
+		  									<select name="" class="form-control input-xs" 
+		  										required="required"
+		  										ng-disabled="!responsable"
+										  		ng-model="item.periodo" 
+									        	ng-options="p.nombre as p.nombre for p in periodos"
+									        	ng-blur="updateTransferencia($index, item)">
+		  									</select>
+		  								</th>
+		  								<th colspan="2">
+		  									{{item}}
+		  								</th>
+		  								<!--<th>
+		  									<select name="" class="form-control input-xs" 
+		  										required="required"
+		  										ng-disabled="!responsable"
+										  		ng-model="item.to" 
+									        	ng-options="cat.id as cat.nombre_categoria for cat in categorias | notSameCategory:item.from"
+									        	ng-change="printTransfer()">
+		  									</select>
+		  								</th>
+		  								<th>
+		  									<input type="number" name="" class="form-control input-xs" 
+		  										value="" min="0" max="" step="" 
+		  										required="required" ng-disabled="!responsable"
+		  										ng-model="item.ammount">
+		  								</th>-->
+		  							</tr>  			  							
+		  						</tbody>
+		  					</table>
+  			  			</div>
+  			  		</div>
+  			  		<div class="row">
+  			  			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+  			  				<div class="pull-right"><small>{{budget.size}} items</small></div>
+  			  			</div>
+  			  		</div>
+		  		</div>
+		  	</div>
+		</form>
+	</div>
+</body>
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.3/angular.min.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.8/angular-strap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.8/angular-strap.tpl.min.js"></script>
+
+	<script src="app.js"></script>
+</html>

@@ -64,16 +64,16 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 		    triggerId: '#showCart'
 		};
 
-		var myPopover = $popover(angular.element(document.querySelector(popoverOptions.triggerId)), popoverOptions);
+		$scope.myPopover = $popover(angular.element(document.querySelector(popoverOptions.triggerId)), popoverOptions);
 		$scope.togglePopover = function() {
 			var _hide = function() {
 				console.log('cerrando...')
-				myPopover.$promise.then(myPopover.hide());
+				$scope.myPopover.$promise.then($scope.myPopover.hide());
 			}
 
-			if (!myPopover.$isShown) {
-				myPopover.$promise.then(myPopover.show());
-				myPopover.$element.on("mouseleave", _hide);
+			if (!$scope.myPopover.$isShown) {
+				$scope.myPopover.$promise.then($scope.myPopover.show());
+				$scope.myPopover.$element.on("mouseleave", _hide);
 			}
 		};
 
@@ -97,4 +97,134 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 	    $scope.initModule = function() {
 			$scope.showPreviewCarroCompras();
 		};
+	})
+	.controller("budgetController", function ($scope, $http, $popover) {
+		$scope.usuario = "RCOTO";
+		$scope.urlApiRest= "http://localhost:7001/ApiRestSpx-1.0.0/api/v1";
+		$scope.idUen = 88;
+		$scope.idCc = 38690;
+		$scope.idioma = 'ESA';
+		$scope.uen = {};
+		$scope.cc = {};
+		$scope.budget = {
+			size: 0,
+			page: 0,
+			last: false,
+			content: []
+		};
+		$scope.periodos = [];
+		$scope.transferencia = [];
+		$scope.responsable = false;
+		$scope.categorias = [];
+
+		console.log('iniciando presupuestos...');
+		
+	    $scope.showBudget = function() {
+	    	if (!$scope.budget.last) {
+	    		console.log("mostrando pagina " + $scope.budget.page + " de presupuesto para uen: " + $scope.idUen + " cc: " + $scope.idCc + "...");
+		    	$http.get($scope.urlApiRest+'/aprobacion/budget/category?uen='+ $scope.idUen + '&cc=' + $scope.idCc + '&page=' + $scope.budget.page + '&size=50').
+		            then(function (response) {
+		                $scope.budget.size = response.data.total_elements;
+		                $scope.budget.content.push.apply($scope.budget.content, response.data.content);
+		                $scope.budget.page = response.data.number + 1;
+		                $scope.budget.last = response.data.last;
+		                $scope.budget.content.forEach(function(item) {
+		                    $scope.transferencia.push({ from: item.id, periodo : item.periodo, to : null, ammount : 0 });
+		                    $scope.categorias.push({ id : item.id, nombre_categoria : item.nombre_categoria });
+		                });
+		            });
+		    } else {
+		    	console.log("ya se llegó al final del presupuesto...");
+		    } 
+	    };
+
+	   $scope.updateTransferencia = function(index, item) {
+	   		console.log('actualizando transferencias['+ index +'] = ' + angular.toJson(item, true));
+	   		console.log($scope.transferencia[index]);
+	   		$scope.transferencia[index] = item;
+	   		$scope.transferencia[index].to = $scope.transferencia[index+1].from;
+	   		console.log($scope.transferencia[index]);
+	   }
+
+	    $scope.loadPeriods = function() {
+    		console.log("cargando periodos...");
+	    	$http.get($scope.urlApiRest+'/aprobacion/budget/periods?filter=true').
+	            then(function (response) {
+	                $scope.periodos.push.apply($scope.periodos, response.data);
+	            });
+	    };
+
+	    $scope.loadUen = function() {
+    		console.log("cargando uen " + $scope.idUen + "...");
+	    	$http.get($scope.urlApiRest+'/uens/' + $scope.idUen)
+	    		.success(function (response) {
+	                $scope.uen = response;
+	                console.log($scope.uen);
+	            })
+	            .error(function(status, data){
+
+	            });
+	    }
+
+	    $scope.loadCostCenter = function() {
+    		console.log("cargando centro de costo " + $scope.idCc + '/' + $scope.idUen + '/' + $scope.idioma + "...");
+	    	$http.get($scope.urlApiRest+'/cc/' + $scope.idCc + '/' + $scope.idUen + '/' + $scope.idioma)
+	    		.success(function (response) {
+	                $scope.cc = response;
+	                console.log($scope.cc);
+	            })
+	            .error(function(status, data){
+
+	            });
+	    }
+
+	    $scope.checkUserResponsible = function() {
+    		console.log("verificando si usuario es responsable de CC " + $scope.idCc + "...");
+	    	$http.get($scope.urlApiRest+'/cc/' + $scope.idCc + '/members/' + $scope.idUen + '/' + $scope.usuario)
+	    		.success(function (response) {
+	                var member = response;
+	                console.log(member);
+	                if (member.relacion === 'Resp')
+	                	$scope.responsable = true;
+	            })
+	            .error(function(status, data){
+	            	console.log('Error response: ' + data)	;
+	            });
+	    }
+
+	    $scope.printTransfer = function() {
+	    	console.log($scope.transferencia);
+	    }
+
+	    $scope.transferBudget = function() {
+	    	// aqui hay que enviar el array de transferencia 
+	    	console.log($scope.transferencia);
+	    	data = $scope.transferencia.filter(item => item.to != null);
+	    	console.log(data);
+	    	if(data.lenght > 0) {
+	    		$http.post($scope.urlApiRest+'/aprobacion/budget/transfer', data)
+	    			.success(function() {
+	    				console.log('transferencia ok...');
+	    			})
+	    			.error(function(status, data) {
+	    				console.log('transferencia fallida!!!');
+	    			})
+	    	}
+	    }
+
+	    $scope.initBudget = function() {
+	    	$scope.loadPeriods();
+	    	$scope.checkUserResponsible();
+		};
+	})
+	.filter('notSameCategory', function() {
+		return function(input, excludeId) {
+			var out = [];
+			angular.forEach(input, function(item) {
+				if (item.id !== excludeId) {
+					out.push(item);
+				}
+			});
+			return out;
+		}
 	});
