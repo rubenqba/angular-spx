@@ -108,7 +108,7 @@
 		  							</tr>
 		  							<tr class="table-secondary-header">
 		  								<th>Per&iacute;odo</th>
-		  								<th class="divider">Transferir a</th>
+		  								<th class="divider">Transferir desde</th>
 		  								<th>Monto</th>
 		  							</tr>
 		  						</thead>
@@ -130,8 +130,8 @@
 		  									<select name="" class="form-control input-xs" 
 		  										required="required"
 		  										ng-disabled="!responsable"
-										  		ng-model="item.to" 
-									        	ng-options="cat.id as cat.nombre_categoria for cat in categorias | notSameCategory:item.from"
+										  		ng-model="item.from" 
+									        	ng-options="cat.id as cat.nombre_categoria for cat in categorias | notSameCategory:item.to"
 									        	ng-change="printTransfer()">
 		  									</select>
 		  								</th>

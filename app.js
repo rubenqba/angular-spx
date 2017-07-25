@@ -129,7 +129,7 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 		                $scope.budget.page = response.data.number + 1;
 		                $scope.budget.last = response.data.last;
 		                $scope.budget.content.forEach(function(item) {
-		                    $scope.transferencia.push({ from: item.id, periodo : item.periodo, to : null, ammount : 0 });
+		                    $scope.transferencia.push({ from: null, periodo : item.periodo, to : item.id, ammount : 0 });
 		                    $scope.categorias.push({ id : item.id, nombre_categoria : item.nombre_categoria });
 		                });
 		            });
@@ -142,7 +142,7 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 	   		console.log('actualizando transferencias['+ index +'] = ' + angular.toJson(item, true));
 	   		console.log($scope.transferencia[index]);
 	   		$scope.transferencia[index] = item;
-	   		$scope.transferencia[index].to = $scope.transferencia[index+1].from;
+	   		$scope.transferencia[index].from = $scope.transferencia[index+1].to;
 	   		console.log($scope.transferencia[index]);
 	   }
 
@@ -199,7 +199,7 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 	    $scope.transferBudget = function() {
 	    	// aqui hay que enviar el array de transferencia 
 	    	console.log($scope.transferencia);
-	    	data = $scope.transferencia.filter(item => item.to != null);
+	    	data = $scope.transferencia.filter(item => item.from != null);
 	    	console.log(data);
 	    	if(data.lenght > 0) {
 	    		$http.post($scope.urlApiRest+'/aprobacion/budget/transfer', data)
