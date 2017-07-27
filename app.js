@@ -98,7 +98,7 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 			$scope.showPreviewCarroCompras();
 		};
 	})
-	.controller("budgetController", function ($scope, $http, $popover) {
+	.controller("budgetController", function ($scope, $http, $window) {
 		$scope.usuario = "RCOTO";
 		$scope.urlApiRest= "http://localhost:7001/ApiRestSpx-1.0.0/api/v1";
 		$scope.idUen = 88;
@@ -108,7 +108,7 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 		$scope.cc = {};
 		$scope.budget = {
 			size: 0,
-			page: 0,
+			page: 0,	
 			last: false,
 			content: []
 		};
@@ -125,26 +125,31 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 		    	$http.get($scope.urlApiRest+'/aprobacion/budget/category?uen='+ $scope.idUen + '&cc=' + $scope.idCc + '&page=' + $scope.budget.page + '&size=50').
 		            then(function (response) {
 		                $scope.budget.size = response.data.total_elements;
+		                angular.push
 		                $scope.budget.content.push.apply($scope.budget.content, response.data.content);
 		                $scope.budget.page = response.data.number + 1;
 		                $scope.budget.last = response.data.last;
-		                $scope.budget.content.forEach(function(item) {
-		                    $scope.transferencia.push({ from: null, periodo : item.periodo, to : item.id, ammount : 0 });
-		                    $scope.categorias.push({ id : item.id, nombre_categoria : item.nombre_categoria });
+		                angular.forEach($scope.budget.content, function(item) {
+		                    $scope.transferencia.push({ 
+		                    	from: item.id, 
+		                    	uen : $scope.idUen, 
+		                    	codigo_centro_costo: item.centro_costo,
+		                    	periodo : item.periodo,
+		                    	categoria : null,
+		                    	ammount : null,
+		                    	usuario : $scope.usuario
+		                    });
+		                    $scope.categorias.push({ id : item.id, categoria : item.categoria, nombre : item.nombre_categoria });
 		                });
 		            });
 		    } else {
 		    	console.log("ya se llegó al final del presupuesto...");
 		    } 
-	    };
-
-	   $scope.updateTransferencia = function(index, item) {
-	   		console.log('actualizando transferencias['+ index +'] = ' + angular.toJson(item, true));
-	   		$scope.transferencia[index] = item;
-	   }
+	   };
 
 	    $scope.loadPeriods = function() {
     		console.log("cargando periodos...");
+    		$scope.periodos = [];
 	    	$http.get($scope.urlApiRest+'/aprobacion/budget/periods?filter=true').
 	            then(function (response) {
 	                $scope.periodos.push.apply($scope.periodos, response.data);
@@ -161,7 +166,7 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 	            .error(function(status, data){
 
 	            });
-	    }
+	    };
 
 	    $scope.loadCostCenter = function() {
     		console.log("cargando centro de costo " + $scope.idCc + '/' + $scope.idUen + '/' + $scope.idioma + "...");
@@ -173,7 +178,7 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 	            .error(function(status, data){
 
 	            });
-	    }
+	    };
 
 	    $scope.checkUserResponsible = function() {
     		console.log("verificando si usuario es responsable de CC " + $scope.idCc + "...");
@@ -187,30 +192,43 @@ angular.module("spxAngular", ['mgcrea.ngStrap.popover'])
 	            .error(function(status, data){
 	            	console.log('Error response: ' + data)	;
 	            });
-	    }
+	    };
 
 	    $scope.printTransfer = function() {
 	    	console.log($scope.transferencia);
-	    }
+	    };
 
 	    $scope.transferBudget = function() {
-	    	// aqui hay que enviar el array de transferencia 
-	    	// console.log($scope.transferencia);
-	    	// data = $scope.transferencia.filter(item => item.from != null);
-	    	// console.log(data);
-	    	$scope.transferencia.push({id : 1, name : 'dos'});
-	    	if(data.lenght > 0) {
+	    	//aqui hay que enviar el array de transferencia 
+	    	console.log($scope.transferencia);
+	    	data = $scope.transferencia.filter(item => item.periodo != null && item.categoria != null && item.ammount > 0);
+	    	console.log(data);
+	    	if(data.length > 0) {
+	    		console.log(angular.toJson(data, true));
 	    		$http.post($scope.urlApiRest+'/aprobacion/budget/transfer', data)
 	    			.success(function() {
-	    				console.log('transferencia ok...');
+	    				angular.element(document.querySelector('#myModal')).modal('hide');
 	    			})
 	    			.error(function(status, data) {
 	    				console.log('transferencia fallida!!!');
 	    			})
 	    	}
-	    }
+	    };
 
 	    $scope.initBudget = function() {
+	    	$scope.budget = {
+	    		size: 0,
+	    		page: 0,	
+	    		last: false,
+	    		content: []
+	    	};
+	    	$scope.transferencia = [];
+
+	    	$scope.loadUen();
+	    	$scope.loadCostCenter();
+
+	    	$scope.showBudget();
+
 	    	$scope.loadPeriods();
 	    	$scope.checkUserResponsible();
 		};

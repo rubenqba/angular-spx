@@ -52,19 +52,19 @@
 		  line-height: 1.5; /* If Placeholder of the input is moved up, rem/modify this. */
 		  border-radius: 3px;
 		}
+		
 	</style>
 </head>
 <body >
 	<div class="container-fluid">
-		<form class="panel panel-default" ng-controller="budgetController as bc">
+		<form class="panel panel-default" ng-controller="budgetController">
 			<div class="panel-heading">
 		  		<div class="row">
 		  			<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8"><h4>Consulta Presupuesto</h4></div>
 		  			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-		  				<button type="button" class="btn btn-primary pull-right" ng-click="transferBudget()">Transferir</button>
+		  				<button type="submit" class="btn btn-primary pull-right" ng-click="transferBudget()">Transferir</button>
 		  			</div>
 		  		</div>
-		  		<div class="row">transferencia={{transferencia}}</div>
 		  	</div>
 		  	<div class="panel-body">
 		  		<div class="row well-sm">
@@ -76,9 +76,7 @@
 		  			</div>
 		  		</div>
 		  		<div class="row">
-  			  		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pre-scrollable" 
-  			  			ng-controller="budgetController"
-  			  			ng-init="initBudget()">
+  			  		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 pre-scrollable">
   			  			<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
 		  					<table class="table table-hover" ng-init="showBudget()">
 		  						<thead class="thead-inverse">
@@ -93,14 +91,14 @@
 		  						</thead>
 		  						<tbody>
 		  							<tr ng-repeat="item in budget.content" style="height: 40px;">
-		  								<td>{{item.id}} - {{item.nombre_categoria}}</td>
+		  								<td>{{item.categoria}} - {{item.nombre_categoria}}</td>
 		  								<td class="text-right">{{item.saldo_disponible}}</td>
 		  								<td>{{item.moneda}}</td>
 		  							</tr>
 		  						</tbody>
 		  					</table>
   			  			</div>
-  			  			<div id="trfForm" class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+  			  			<div id="trfForm" class="col-xs-6 col-sm-6 col-md-6 col-lg-6" ng-init="initBudget()">
 		  					<table class="table">
 		  						<thead>
 		  							<tr class="bg-primary">
@@ -116,28 +114,22 @@
 		  							<tr ng-repeat="item in transferencia" style="height: 40px;">
 		  								<th>
 		  									<select name="" class="form-control input-xs" 
-		  										required="required"
 		  										ng-disabled="!responsable"
 										  		ng-model="item.periodo" 
-									        	ng-options="p.nombre as p.nombre for p in periodos"
-									        	ng-blur="updateTransferencia($index, item); printTransfer();">
+									        	ng-options="p.nombre as p.nombre for p in periodos">
 		  									</select>
 		  								</th>
 		  								<th>
 		  									<select name="" class="form-control input-xs" 
-		  										required="required"
 		  										ng-disabled="!responsable"
-										  		ng-model="item.from" 
-									        	ng-options="cat.id as cat.nombre_categoria for cat in categorias | notSameCategory:item.to"
-									        	ng-blur="updateTransferencia($index, item); printTransfer();">
+										  		ng-model="item.categoria" 
+									        	ng-options="cat.id as cat.nombre_categoria for cat in categorias | notSameCategory:item.from">
 		  									</select>
 		  								</th>
 		  								<th>
 		  									<input type="number" name="" class="form-control input-xs" 
-		  										value="" min="0" max="" step="" 
-		  										required="required" ng-disabled="!responsable"
-		  										ng-model="item.ammount"
-		  										ng-blur="updateTransferencia($index, item); printTransfer();">
+		  										value="" min="0" max="" step="" ng-disabled="!responsable"
+		  										ng-model="item.ammount">
 		  								</th>
 		  							</tr>  			  							
 		  						</tbody>

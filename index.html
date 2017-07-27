@@ -45,6 +45,13 @@
 		.popover {
 		    min-width: 600px ! important;
 		}
+		.input-xs {
+		  height: 22px;
+		  padding: 2px 5px;
+		  font-size: 12px;
+		  line-height: 1.5; /* If Placeholder of the input is moved up, rem/modify this. */
+		  border-radius: 3px;
+		}
     </style>
 
 
@@ -108,39 +115,18 @@
 	<div class="container-fluid">
 		<h1>Pruebas de SPX</h1>	
 		<div class="row" ng-controller="cartController">
-			<div class="col-md-4">
-	            <span> </span>
-	        </div>
-	        <div class="col-md-1">	           
-	            <button id="showCart" type="button" class="btn btn-danger" 
-	            	title="{{popover.title}}" 
-	            	data-content="{{popover.content}}" 
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<a id="showCart" class="pull-right" href="javascript:"
+					style="text-decoration: none !important"
+					data-content="{{popover.content}}" 
 					ng-mouseover="togglePopover()">
 					<span class="fa-stack fa-lg">
-		        	  <i class="fa fa-circle fa-stack-2x"></i>
-		        	  <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
-		        	</span>
-				</button>
-	        </div>
-	        <div class="col-md-4">
-	            <span> </span>
-	        </div>
-	        <div  class="col-md-1">
-                <a id="showCartLink" href="javascript:"
-                	style="text-decoration: none !important"
-                	data-content="{{popover.content}}" 
-					ng-mouseover="togglePopover()">
-		        	<span class="fa-stack fa-lg">
-		        	  <i class="fa fa-circle fa-stack-2x"></i>
-		        	  <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
-		        	</span>
-            	</a>
-	        </div>
-		</div>
-		<div class="row">
-			<div class="col-md-1">
-				<button id="showTrf" type="button" class="btn btn-success" >Consultar/Transferir Presupuesto</button>
+					  <i class="fa fa-circle fa-stack-2x"></i>
+					  <i class="fa fa-shopping-cart fa-stack-1x fa-inverse"></i>
+					</span>
+				</a>
 			</div>
+			
 		</div>
 		<div ng-controller="uenController">
 			<div class="row">
@@ -173,6 +159,17 @@
 				</div>
 			</div>
 		</div>
+		<div class="row" >
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" ng-controller="budgetController">
+				<div ng-include="'transference.tpl'"></div>
+				<button id="showTrf" type="button" 
+					class="btn btn-success fa fa-usd pull-right" 
+					data-toggle="modal" 
+					data-target="#myModal"
+					ng-click="initBudget()">
+				</button>
+			</div>
+		</div>
 	</div>
 		<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -186,5 +183,6 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.8/angular-strap.tpl.min.js"></script>
 
 	<script src="app.js"></script>
+	
 </body>
 </html>
